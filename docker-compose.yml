@@ -1,0 +1,38 @@
+version: '3.7'
+
+services:
+  backend:
+    image: flip-backend:latest
+    build:
+      context: .
+      dockerfile: docker/backend/Dockerfile
+    ports:
+      - ${PORT}:${PORT}
+      - 9229:9229
+    volumes:
+      - .:/app
+      - /app/node_modules
+    links:
+      - mongodb
+    networks:
+      - flip
+    env_file:
+      - .env
+
+  mongodb:
+    image: flip-mongodb:latest
+    build:
+      context: .
+      dockerfile: docker/mongo/Dockerfile
+    ports:
+      - ${MONGO_PORT}:27017
+    env_file:
+      - .env
+    networks:
+      - flip
+    volumes:
+      - ./mongo/db:/data/db
+
+networks:
+  flip:
+    driver: "bridge"
