@@ -77,7 +77,7 @@ export class CartController {
         return cart;
     }
 
-    @Patch(':uuid/:currency')
+    @Patch(':uuid/checkout/:currency')
     @ApiParam({
         name: 'uuid',
         type: 'string',

@@ -1,75 +1,62 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
+## FLIP API
 
-[travis-image]: https://api.travis-ci.org/nestjs/nest.svg?branch=master
-[travis-url]: https://travis-ci.org/nestjs/nest
-[linux-image]: https://img.shields.io/travis/nestjs/nest/master.svg?label=linux
-[linux-url]: https://travis-ci.org/nestjs/nest
-  
-  <p align="center">A progressive <a href="http://nodejs.org" target="blank">Node.js</a> framework for building efficient and scalable server-side applications, heavily inspired by <a href="https://angular.io" target="blank">Angular</a>.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/dm/@nestjs/core.svg" alt="NPM Downloads" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://api.travis-ci.org/nestjs/nest.svg?branch=master" alt="Travis" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://img.shields.io/travis/nestjs/nest/master.svg?label=linux" alt="Linux" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#5" alt="Coverage" /></a>
-<a href="https://gitter.im/nestjs/nestjs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=body_badge"><img src="https://badges.gitter.im/nestjs/nestjs.svg" alt="Gitter" /></a>
-<a href="https://opencollective.com/nest#backer"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec"><img src="https://img.shields.io/badge/Donate-PayPal-dc3d53.svg"/></a>
-  <a href="https://twitter.com/nestframework"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+API created according to instructions from PDF file. 
 
-## Description
+Documentation of API available on /api endpoint OS3 Swagger exposed. 
+The api has been prepared with nest.js framework and mongo db as data storage.
+There are 2 docker containers, one with mongo and second with node app. 
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+### Additional features to initial requirements:
+- ability to add products which maybe added later to the cart
+- ability to add products with any currency from exchange rate list
+- during checkout calculating total for cart in set currency with ability to convert products with different currencies
+- removing quantity from products set during addition to cart
+ 
+ 
+## Installation / Running the app
 
-## Installation
-
+For dev build with file watching
 ```bash
-$ npm install
+$ make dev
 ```
 
-## Running the app
-
+For prod builds (installation prod packages and no nest watchers)
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+$ make prod
 ```
+
+After building the containers for the very first time you may preserve builds and use
+```bash
+$ make ENV=prod | dev up
+```
+
+## Additional information
+
+Configuration of the application is done with env files (.env.dev and .env.prod) which will be copied to .env file 
+while running make command (configuration from .env is being used by app )
 
 ## Test
 
 ```bash
 # unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+$ yarn test
 ```
 
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## Missing bits
+As usual there are improvements that could be added to the project:
+- more tests
+- more validation pipes 
+- better schema description in swagger
+- better mongo db 
+- using of config service instead of pure dotenv 
+- better separation of domain logic from datasource - clean architecture 
 
 ## Stay in touch
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- Author - [Maciej Guzek](https://linkedin.com/maciej.guzek)
+- Github - [https://github.com/kezugo/flip-api](https://github.com/kezugo/flip-api)
 
-## License
+Maciej Guzek
++48534807090
+kezugo@gmail.com
 
-  Nest is [MIT licensed](LICENSE).
