@@ -7,12 +7,11 @@ The api has been prepared with nest.js framework and mongo db as data storage.
 There are 2 docker containers, one with mongo and second with node app. 
 
 ### Additional features to initial requirements:
-- ability to add products which maybe added later to the cart
-- ability to add products with any currency from exchange rate list
-- during checkout calculating total for cart in set currency with ability to convert products with different currencies
-- removing quantity from products set during addition to cart
- 
- 
+- ability to define products with quantity "in-store" and predefined currency
+- removing quantity of product from store during additions to cart
+- adding back quantity of product to store during removing product from cart
+- during checkout products with different currencies are converted to selected currency for checkout
+
 ## Installation / Running the app
 
 For dev build with file watching
