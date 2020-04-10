@@ -29,6 +29,8 @@ After building the containers for the very first time you may preserve builds an
 $ make ENV=prod | dev up
 ```
 
+also it might be run typically with docker-compose
+
 ## Additional information
 
 Configuration of the application is done with env files (.env.dev and .env.prod) which will be copied to .env file 
@@ -44,9 +46,8 @@ $ yarn test
 ## Missing bits
 As usual there are improvements that could be added to the project:
 - more tests
-- more validation pipes 
-- better schema description in swagger
-- better mongo db 
+- more validation, add pipes 
+- better mongo db structure
 - using of config service instead of pure dotenv 
 - better separation of domain logic from datasource - clean architecture 
 
