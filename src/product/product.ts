@@ -2,7 +2,6 @@ import { Price } from '../price/price';
 import { prop } from '@typegoose/typegoose';
 
 export class ProductInCart {
-
     @prop()
     productId: string;
 
@@ -14,7 +13,6 @@ export class ProductInCart {
 }
 
 export class Product {
-
     @prop() // TODO : jak sie oznacza w modelach id z mongo
     id: string;
 

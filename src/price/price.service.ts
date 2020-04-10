@@ -1,4 +1,4 @@
-import { HttpService, Injectable } from '@nestjs/common';
+import { HttpService, Injectable, NotFoundException } from '@nestjs/common';
 import { AxiosResponse } from 'axios';
 import { Price } from './price';
 import { Observable } from 'rxjs';
@@ -65,6 +65,8 @@ export class PriceService {
             const rates = await this.getCurrencyExchangeRates().toPromise();
             this.exchangeRates = rates.data;
         }
+        const rate = this.exchangeRates.rates[currencyFormatted];
+        if (!rate) throw new NotFoundException(`Rate for ${currency} not found.`);
         return this.exchangeRates.rates[currencyFormatted];
     }
 
@@ -78,7 +80,7 @@ export class PriceService {
         return decimal(euroToOutput) / decimal(euroToInput);
     }
 
-    async convertPrice(price: Price = {amount: 0, currency: 'EUR'}, currency: string): Promise<Price> {
+    async convertPrice(price: Price = { amount: 0, currency: 'EUR' }, currency: string): Promise<Price> {
         const newPrice = new Price();
         newPrice.currency = this.formatCurrency(currency);
         newPrice.amount = decimal(price.amount) * decimal(await this.getRatio(price.currency, currency));
