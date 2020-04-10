@@ -89,8 +89,8 @@ export class CartController {
         type: 'string',
     })
     @ApiResponse({ status: 201, description: 'Product has been removed from cart and added back to store.' })
-    async removeProduct(@Param('uuid', new ParseUUIDPipe()) uuid: string, @Param('productId') productId: string): Promise<Cart> {
-        await this.cartService.removeCart(uuid);
+    async removeProduct(@Param('uuid', new ParseUUIDPipe()) uuid: string, @Param('productId') productId: string) {
+        this.cartService.removeCart(uuid);
     }
 
     @Patch(':uuid/checkout/:currency')
