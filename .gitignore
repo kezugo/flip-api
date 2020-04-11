@@ -36,3 +36,5 @@ lerna-debug.log*
 # own
 /mongo
 /flip-api.iml
+
+src/product/product-storage.service.ts

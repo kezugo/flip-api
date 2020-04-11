@@ -1,8 +1,8 @@
 import { HttpService, Injectable, NotFoundException } from '@nestjs/common';
 import { AxiosResponse } from 'axios';
-import { Price } from './price';
+import { PriceModel } from './model/price.model';
 import { Observable } from 'rxjs';
-import { Rates } from './rates.interface';
+import { Rates } from './model/rates.interface';
 import { decimal } from '../helpers';
 
 const DEFAULT_EXCHANGE_RATES = {
@@ -80,8 +80,8 @@ export class PriceService {
         return decimal(euroToOutput) / decimal(euroToInput);
     }
 
-    async convertPrice(price: Price = { amount: 0, currency: 'EUR' }, currency: string): Promise<Price> {
-        const newPrice = new Price();
+    async convertPrice(price: PriceModel = { amount: 0, currency: 'EUR' }, currency: string): Promise<PriceModel> {
+        const newPrice = new PriceModel();
         newPrice.currency = this.formatCurrency(currency);
         newPrice.amount = decimal(price.amount) * decimal(await this.getRatio(price.currency, currency));
         return newPrice;

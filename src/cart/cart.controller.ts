@@ -1,22 +1,9 @@
-import {
-    Body,
-    Controller,
-    Delete,
-    Get,
-    NotAcceptableException,
-    NotFoundException,
-    Param,
-    ParseUUIDPipe,
-    Patch,
-    Post,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post } from '@nestjs/common';
 import { AddProductToCartDto } from './dto/add-product-to-cart.dto';
-import { Cart } from './cart';
+import { CartModel } from './domain/cart.model';
 import { CartService } from './cart.service';
 import { PriceService } from '../price/price.service';
 import { ProductService } from '../product/product.service';
-import { Price } from '../price/price';
-import { decimal } from '../helpers';
 import { ApiBody, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 
 @Controller('cart')
@@ -27,9 +14,9 @@ export class CartController {
     @ApiOperation({
         summary: 'Create a cart and returns it',
     })
-    @ApiResponse({ status: 201, description: 'Cart has been added.' })
-    async createCart(): Promise<Cart> {
-        return this.cartService.createCart();
+    @ApiResponse({ status: 201, description: 'CartModel has been added.' })
+    async createCart(): Promise<CartModel> {
+        return this.cartService.save();
     }
 
     @Get(':uuid')
@@ -38,10 +25,12 @@ export class CartController {
     })
     @ApiParam({
         name: 'uuid',
+        description: 'uuid of cart',
         type: 'string',
     })
     @ApiResponse({ status: 201, description: 'Returns cart or null if no cart.' })
-    async getCart(@Param('uuid') uuid: string): Promise<Cart | null> {
+    // TODO : @UseFilters catch exception and prepare responses
+    async getCart(@Param('uuid') uuid: string): Promise<CartModel | null> {
         return this.cartService.getCart(uuid);
     }
 
@@ -51,11 +40,14 @@ export class CartController {
     })
     @ApiParam({
         name: 'uuid',
+        description: 'uuid of cart',
         type: 'string',
     })
-    @ApiResponse({ status: 201, description: 'Cart has been removed and products are back in store.' })
+    @ApiResponse({ status: 201, description: 'CartModel has been removed and products are back in store.' })
     async removeCart(@Param('uuid', new ParseUUIDPipe()) uuid: string) {
-        await this.cartService.removeCart(uuid);
+        // TODO : Obsługa exception ze nie znaleziono carta ?? dodac info do api
+        const cart = await this.cartService.getCart(uuid);
+        await this.cartService.removeCart(cart);
     }
 
     @Post(':uuid/product')
@@ -64,16 +56,19 @@ export class CartController {
     })
     @ApiParam({
         name: 'uuid',
+        description: 'uuid of cart',
         type: 'string',
     })
     @ApiBody({
         type: AddProductToCartDto,
     })
     @ApiResponse({ status: 201, description: 'Add product to cart and update qunatity of product in store.' })
-    // TODO : sprawdzenie czy taki produkt w ogóle istnieje - validation pipe
-    async addProduct(@Body() productData: AddProductToCartDto, @Param('uuid', new ParseUUIDPipe()) uuid: string): Promise<Cart> {
+    // TODO : @UseFilters catch exception and prepare responses
+    async addProduct(@Body() productData: AddProductToCartDto, @Param('uuid', new ParseUUIDPipe()) uuid: string): Promise<CartModel> {
         const { productId, quantity = 1 } = productData;
-        return await this.cartService.addProduct(uuid, productId, quantity);
+        const cart = await this.cartService.getCart(uuid);
+        const product = await this.productService.getProduct(productId);
+        return this.cartService.addProduct(cart, product, quantity);
     }
 
     @Delete(':uuid/product/:productId')
@@ -82,15 +77,19 @@ export class CartController {
     })
     @ApiParam({
         name: 'uuid',
+        description: 'uuid of cart',
         type: 'string',
     })
     @ApiParam({
         name: 'productId',
+        description: 'id of the product',
         type: 'string',
     })
-    @ApiResponse({ status: 201, description: 'Product has been removed from cart and added back to store.' })
+    @ApiResponse({ status: 201, description: 'ProductModel has been removed from cart and added back to store.' })
     async removeProduct(@Param('uuid', new ParseUUIDPipe()) uuid: string, @Param('productId') productId: string) {
-        this.cartService.removeCart(uuid);
+        const cart = await this.cartService.getCart(uuid);
+        const product = await this.productService.getProduct(productId);
+        return this.cartService.removeProduct(cart, product);
     }
 
     @Patch(':uuid/checkout/:currency')
@@ -99,14 +98,17 @@ export class CartController {
     })
     @ApiParam({
         name: 'uuid',
+        description: 'uuid of cart',
         type: 'string',
     })
     @ApiParam({
         name: 'currency',
+        description: 'symbol of currency',
         type: 'string',
     })
     @ApiResponse({ status: 201, description: 'Calculation of carts total succesed.' })
-    async checkout(@Param('uuid', new ParseUUIDPipe()) uuid: string, @Param('currency') currency: string): Promise<Cart> {
-        return this.cartService.checkout(uuid, currency);
+    async checkout(@Param('uuid', new ParseUUIDPipe()) uuid: string, @Param('currency') currency: string): Promise<CartModel> {
+        const cart = await this.cartService.getCart(uuid);
+        return this.cartService.checkout(cart, currency);
     }
 }
