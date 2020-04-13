@@ -20,4 +20,8 @@ export class CartMongoRepository implements ICartRepository {
     async remove(cart: CartModel) {
         await this.cartModel.remove({ uuid: cart.uuid }).exec();
     }
+
+    async find(query?: { [P in keyof CartModel]?: CartModel[P] }): Promise<CartModel[]> {
+        return await this.cartModel.find(query).exec();
+    }
 }
