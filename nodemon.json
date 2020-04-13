@@ -9,5 +9,7 @@
   "env": {
     "NODE_ENV": "development"
   },
-  "ext": "js,json,ts"
+  "ext": "js,json,ts",
+  "delay": "2500",
+  "signal": "SIGINT"
 }
