@@ -1,9 +1,9 @@
-import { HttpService, Injectable, NotFoundException } from '@nestjs/common';
+import { HttpService, Injectable } from '@nestjs/common';
 import { AxiosResponse } from 'axios';
-import { Price } from './price';
 import { Observable } from 'rxjs';
-import { Rates } from './rates.interface';
-import { decimal } from '../helpers';
+
+import { Rates } from '../__domain__/entities/rates.interface';
+import { IPriceRepository } from '../__domain__/repositories/price.repository';
 
 const DEFAULT_EXCHANGE_RATES = {
     base: 'EUR',
@@ -47,7 +47,7 @@ const DEFAULT_EXCHANGE_RATES = {
 const EXCHANGE_RATES_API = 'https://api.exchangeratesapi.io/latest';
 
 @Injectable()
-export class PriceService {
+export class PriceExchangeRatesApiService implements IPriceRepository {
     constructor(private httpService: HttpService) {}
 
     private exchangeRates: Rates = DEFAULT_EXCHANGE_RATES;
@@ -57,7 +57,7 @@ export class PriceService {
     }
 
     async getExchangeRateToEuro(currency: string): Promise<number> {
-        const currencyFormatted = this.formatCurrency(currency);
+        const currencyFormatted = currency.toUpperCase();
         if (currencyFormatted === 'EUR') {
             return 1;
         }
@@ -65,25 +65,6 @@ export class PriceService {
             const rates = await this.getCurrencyExchangeRates().toPromise();
             this.exchangeRates = rates.data;
         }
-        const rate = this.exchangeRates.rates[currencyFormatted];
-        if (!rate) throw new NotFoundException(`Rate for ${currency} not found.`);
         return this.exchangeRates.rates[currencyFormatted];
-    }
-
-    formatCurrency(currency: string) {
-        return currency.toUpperCase();
-    }
-
-    async getRatio(input: string, output: string): Promise<number> {
-        const euroToInput = await this.getExchangeRateToEuro(input);
-        const euroToOutput = await this.getExchangeRateToEuro(output);
-        return decimal(euroToOutput) / decimal(euroToInput);
-    }
-
-    async convertPrice(price: Price = { amount: 0, currency: 'EUR' }, currency: string): Promise<Price> {
-        const newPrice = new Price();
-        newPrice.currency = this.formatCurrency(currency);
-        newPrice.amount = decimal(price.amount) * decimal(await this.getRatio(price.currency, currency));
-        return newPrice;
     }
 }

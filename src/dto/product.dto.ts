@@ -1,8 +1,7 @@
-import { IsNotEmpty, IsNumber, IsOptional, Min } from 'class-validator';
-import { Price } from '../../price/price';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsNotEmptyObject, IsNumber, IsOptional, Min } from 'class-validator';
 
-export class AddProductDto {
+export class ProductDto {
     @ApiProperty({
         description: 'Available quantity of product in store',
         minimum: 1,
@@ -10,21 +9,29 @@ export class AddProductDto {
     })
     @IsNumber()
     @Min(1)
-    quantity: number;
+    readonly quantity: number;
 
     @ApiProperty({
         description: 'Name of the product',
         required: true,
     })
     @IsNotEmpty()
-    name: string;
+    readonly name: string;
 
     @ApiProperty({
         description: 'Optional description of the product',
         required: false,
     })
     @IsOptional()
-    description?: string;
+    readonly description?: string;
 
-    price: Price;
+    @IsNotEmptyObject()
+    @ApiProperty({
+        description: 'Price of the product',
+        required: true,
+    })
+    readonly price: {
+        currency: string;
+        amount: number;
+    };
 }

@@ -8,6 +8,7 @@ module.exports = {
     "prettier"
   ],
   "plugins": [
+    "simple-import-sort",
     "@typescript-eslint/eslint-plugin",
     "prettier"
   ],
@@ -23,6 +24,13 @@ module.exports = {
     "sourceType": "module",
   },
   "rules": {
+    // "sort-imports": ["error", {
+    //   "ignoreCase": false,
+    //   "ignoreDeclarationSort": false,
+    //   "ignoreMemberSort": false,
+    //   "memberSyntaxSortOrder": ["none", "multiple", "single", "all"]
+    // }],
+    "simple-import-sort/sort": "error",
     "jsx-no-lambda": "off",
     "jsx-boolean-value": "off",
     "no-string-literal": "off",
@@ -68,6 +76,6 @@ module.exports = {
         "ignoreRestSiblings": true
       }
     ],
-    "@typescript-eslint/indent": "off"
+    "@typescript-eslint/indent": "off",
   },
 };

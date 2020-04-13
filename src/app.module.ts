@@ -1,25 +1,34 @@
 import { HttpModule, Module } from '@nestjs/common';
-import { CartController } from './cart/cart.controller';
-import { ProductService } from './product/product.service';
-import { CartService } from './cart/cart.service';
-import { PriceService } from './price/price.service';
-import { ProductController } from './product/product.controller';
 import { TypegooseModule } from 'nestjs-typegoose';
-import { Cart } from './cart/cart';
-import { Product, ProductInCart } from './product/product';
+
+import { CartModel } from './__domain__/models/cart.model';
+import { ProductInCartModel } from './__domain__/models/product-in-cart.model';
+import { ProductModel } from './__domain__/models/product.model';
+import { CartController } from './api/cart.controller';
+import { ProductController } from './api/product.controller';
+import { CartMongoRepository } from './cart/cart-mongo.repository';
+import { PriceExchangeRatesApiService } from './price/price-exchange-rates-api.service';
+import { ProductMongoRepository } from './product/product-mongo.repository';
+import { cartScenarioProvider, priceScenarioProvider, productScenarioProvider } from './scenarios';
 
 @Module({
     imports: [
         HttpModule,
-        // TODO : Konfiguracja z plików
         TypegooseModule.forRoot('mongodb://flip:flip@mongodb/flip', {
             useNewUrlParser: true,
         }),
-        TypegooseModule.forFeature([Cart]),
-        TypegooseModule.forFeature([ProductInCart]),
-        TypegooseModule.forFeature([Product]),
+        TypegooseModule.forFeature([CartModel]),
+        TypegooseModule.forFeature([ProductInCartModel]),
+        TypegooseModule.forFeature([ProductModel]),
     ],
     controllers: [CartController, ProductController],
-    providers: [CartService, PriceService, ProductService],
+    providers: [
+        priceScenarioProvider,
+        PriceExchangeRatesApiService,
+        cartScenarioProvider,
+        CartMongoRepository,
+        productScenarioProvider,
+        ProductMongoRepository,
+    ],
 })
 export class AppModule {}

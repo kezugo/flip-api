@@ -13,5 +13,6 @@ ENV ENV=${ENV}
 ADD . /app
 
 RUN npm install -g yarn
+RUN yarn install
 
 ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]

@@ -11,7 +11,6 @@ clean:
 
 cleanAll: clean
 	rm -f .env
-	rm -f docker-compose.yml
 
 run: envfiles up
 

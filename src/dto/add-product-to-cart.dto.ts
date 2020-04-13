@@ -1,12 +1,12 @@
-import { IsNotEmpty, IsNumber, IsOptional, Min } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsNumber, Min } from 'class-validator';
 
 export class AddProductToCartDto {
     @ApiProperty({
         description: 'Id of the product to be added to cart',
     })
     @IsNotEmpty()
-    productId: string;
+    readonly productId: string;
 
     @ApiProperty({
         description: 'Quantity of product to be added to cart',
@@ -15,5 +15,5 @@ export class AddProductToCartDto {
     })
     @IsNumber()
     @Min(1)
-    quantity: number;
+    readonly quantity: number;
 }
