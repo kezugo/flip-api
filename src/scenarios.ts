@@ -6,6 +6,7 @@ import { ProductScenario } from './__domain__/scenarios/product.scenario';
 import { CartMongoRepository } from './cart/cart-mongo.repository';
 import { PriceExchangeRatesApiService } from './price/price-exchange-rates-api.service';
 import { ProductMongoRepository } from './product/product-mongo.repository';
+import {IPriceRepository} from "./__domain__/repositories/price.repository";
 
 export const enum SCENARIOS {
     PRODUCT = 'ProductScenario',
@@ -23,8 +24,8 @@ export const productScenarioProvider = {
 
 export const priceScenarioProvider = {
     provide: SCENARIOS.PRICE,
-    useFactory: (repository: IProductRepository) => {
-        return new ProductScenario(repository);
+    useFactory: (repository: IPriceRepository) => {
+        return new PriceScenario(repository);
     },
     inject: [PriceExchangeRatesApiService],
 };

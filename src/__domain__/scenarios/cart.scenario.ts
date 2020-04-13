@@ -58,7 +58,9 @@ export class CartScenario {
     async checkout(cart: CartModel, currency: string): Promise<CartModel> {
         this.checkIfCartCheckoutPossible(cart);
         const totalAmount = await cart.products.reduce(async (acc, product) => {
-            const amount = await this.priceScenario.convertPrice(product.price.amount, product.price.currency, currency);
+            const a = product.price.amount? product.price.amount : 0;
+            const c = product.price.currency ? product.price.currency : 'EUR';
+            const amount = await this.priceScenario.convertPrice(a, c, currency);
             return (await acc) + decimal(product.quantity, 2) * decimal(amount, 2);
         }, Promise.resolve(0));
         cart.confirmCheckout(totalAmount, currency);
